@@ -8,6 +8,6 @@ edition = "2021"
 [dependencies]
 
 
-    [[bin]]
-    name = "0verview"
-    path = "src/main.rs"
+[[bin]]
+name = "0verview"
+path = "src/main.rs"
