@@ -71,7 +71,10 @@ async fn handle_assets(Path(path): Path<String>) -> impl IntoResponse {
 }
 
 async fn handle_main() -> impl IntoResponse {
-    let template = MyTemplate {};
+    let template = MyTemplate {
+        usrimg: "https://avatars.githubusercontent.com/u/54004823?v=4".to_string(),
+        usrname: "Marc Mason".to_string(),
+    };
     let reply_html = template.render().unwrap();
     (StatusCode::OK, Html(reply_html).into_response())
 }
