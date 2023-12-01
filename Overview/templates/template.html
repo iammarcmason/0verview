@@ -10,7 +10,7 @@
 <body class="active">
   <header class="header"></header>
   <section class="sidebar">
-    <div class="menuToggle active"></div>
+    <div style="--bg:#66FF66;" class="menuToggle active"></div>
     <ul>
       <li class="logo" style="--bg:#242424;">
         <a href="#">
@@ -21,61 +21,61 @@
       <div class="MenuList">
         <li style="--bg:#66FF66; --nth:0" class="active">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="home-outline"></ion-icon></div>
             <div class="text">Dashboard</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:1">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="people-outline"></ion-icon></div>
             <div class="text">Clients</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:2">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="newspaper-outline"></ion-icon></div>
             <div class="text">Invoices</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:3">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="cash-outline"></ion-icon></div>
             <div class="text">Transactions</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:4">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="card-outline"></ion-icon></div>
             <div class="text">Bank Accounts</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:5">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="business-outline"></ion-icon></div>
             <div class="text">Companies</div>
           </a>
         </li>
         <li style="--bg:#f44336;--nth:6">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="calculator-outline"></ion-icon></div>
             <div class="text">Tax</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:7">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="beer-outline"></ion-icon></div>
             <div class="text">Expenses</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:8">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="analytics-outline"></ion-icon></div>
             <div class="text">Reports</div>
           </a>
         </li>
         <li style="--bg:#66FF66;--nth:9">
           <a href="#">
-            <div class="icon"></div>
+            <div class="icon"><ion-icon name="settings-outline"></ion-icon></div>
             <div class="text">Settings</div>
           </a>
         </li>
@@ -137,6 +137,7 @@
 
       // Set the '--bg' value of the '.main' element to the clicked menu item's '--bg' value
       Main.style.setProperty('--bg', bgColor);
+      menuToggle.style.setProperty('--bg', bgColor);
     }
 
 
@@ -147,7 +148,8 @@
 
   </script>
 
-
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

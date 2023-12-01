@@ -12,6 +12,9 @@ use axum::{
     routing::get,
     Router,
 };
+
+use tokio::net::TcpListener;
+
 use std::net::SocketAddr;
 
 use tracing::{info, warn};
@@ -48,10 +51,13 @@ async fn main() {
 
     info!("Listening on http://{}", listen_addr);
 
-    axum::Server::bind(&listen_addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    // axum::Server::bind(&listen_addr)
+    //     .serve(app.into_make_service())
+    //     .await
+    //     .unwrap();
+
+    let listener = TcpListener::bind(&listen_addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
 
 static THEME_CSS: &str = include_str!("../assets/theme.css");
