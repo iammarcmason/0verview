@@ -16,11 +16,24 @@
             .then(response => response.json())
             .then(data => {
                 const listContainer = document.getElementById('list-container');
+
                 data.forEach(item => {
                     const listItem = document.createElement('li');
+
+                    // Create elements for category and subcategory
+                    const category = document.createElement('span');
+                    category.textContent = item.category + ', ';
+                    listItem.appendChild(category);
+
+                    const subcategory = document.createElement('span');
+                    subcategory.textContent = item.sub_category + ': ';
+                    listItem.appendChild(subcategory);
+
+                    // Create a link for the title
                     const link = document.createElement('a');
                     link.href = item.link;
-                    link.textContent = `${item.category}, ${item.sub_category}, ${item.title}`;
+                    link.textContent = item.title;
+
                     listItem.appendChild(link);
                     listContainer.appendChild(listItem);
                 });
