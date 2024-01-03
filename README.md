@@ -1,2 +1,2 @@
 # 0verview
-Simple Accounting Software for Contractors
+Learning Resources that I use, and an excuse to write a website using Rust & HMTX

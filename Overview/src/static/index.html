@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple List</title>
+</head>
+<body>
+    <ul id="list-container">
+        <!-- List items will be inserted here -->
+    </ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org/dist/htmx.js"></script>
+    <script>
+        // Fetch data from the backend and render the list using HTMX
+        fetch('/list')
+            .then(response => response.json())
+            .then(data => {
+                const listContainer = document.getElementById('list-container');
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = item.link;
+                    link.textContent = `${item.category}, ${item.sub_category}, ${item.title}`;
+                    listItem.appendChild(link);
+                    listContainer.appendChild(listItem);
+                });
+            });
+    </script>
+</body>
+</html>
