@@ -1,4 +1,4 @@
-use axum::{response::Html, routing::{get,post}, Router};
+use axum::{response::Html, routing::get, Router};
 use serde::Serialize;
 use sqlx::{sqlite::SqlitePool, Row};
 
