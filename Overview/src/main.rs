@@ -1,13 +1,18 @@
-use axum::{response::Html, routing::get, Router};
+use axum::{response::Html, routing::{get,post}, Router};
 use serde::Serialize;
 use sqlx::{sqlite::SqlitePool, Row};
 
 use std::{net::SocketAddr, path::Path};
 
 #[derive(Serialize)]
-struct ListItem {
+struct GroupedItems {
     category: String,
     sub_category: String,
+    items: Vec<ListItem>,
+}
+
+#[derive(Serialize)]
+struct ListItem {
     title: String,
     link: String,
 }
@@ -58,19 +63,18 @@ async fn main() -> Result<(), sqlx::Error> {
             "/",
             get(|| async { Html(include_str!("static/index.html")) }),
         )
-        .route(
-            "/list",
-            get(move || {
-                let pool = pool.clone();
-                async move {
-                    let result = get_list(&pool).await;
-                    match result {
-                        Ok(data) => Html(serde_json::to_string(&data).unwrap()),
-                        Err(_) => Html("Error retrieving data".to_string()), // Customize error response
-                    }
+        .route("/list", get(move || {
+            let pool = pool.clone();
+            async move {
+                let result = get_list(&pool).await;
+                match result {
+                    Ok(data) => Html(serde_json::to_string(&data).unwrap()),
+                    Err(_) => Html("Error retrieving data".to_string()), // Customize error response
                 }
-            }),
-        );
+            }
+        }))
+        //.route("/insert", post(insert_data))
+        ;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000)); // Change the port as needed
 
@@ -81,24 +85,55 @@ async fn main() -> Result<(), sqlx::Error> {
     Ok(())
 }
 
-async fn get_list(pool: &SqlitePool) -> Result<Vec<ListItem>, sqlx::Error> {
-    let mut items = vec![];
-
+async fn get_list(pool: &SqlitePool) -> Result<Vec<GroupedItems>, sqlx::Error> {
+    // Fetch data directly from the database on each call
+    let mut grouped_items = vec![];
     let mut conn = pool.acquire().await?;
-    let rows = sqlx::query("SELECT category, sub_category, title, link FROM list_items")
-        .fetch_all(&mut *conn)
-        .await?;
+
+    let rows = sqlx::query(
+        "SELECT category, sub_category, title, link FROM list_items ORDER BY category, sub_category, title",
+    )
+    .fetch_all(&mut *conn)
+    .await?;
+
+    let mut current_category = String::new();
+    let mut current_subcategory = String::new();
+    let mut current_group = None;
 
     for row in rows {
-        items.push(ListItem {
-            category: row.get(0),
-            sub_category: row.get(1),
-            title: row.get(2),
-            link: row.get(3),
-        });
+        let category: String = row.get(0);
+        let sub_category: String = row.get(1);
+        let title: String = row.get(2);
+        let link: String = row.get(3);
+
+        if category != current_category || sub_category != current_subcategory {
+            if let Some(group) = current_group.take() {
+                grouped_items.push(group);
+            }
+
+            current_category = category.clone();
+            current_subcategory = sub_category.clone();
+
+            let mut items = vec![];
+            items.push(ListItem { title, link });
+
+            current_group = Some(GroupedItems {
+                category: category.clone(),
+                sub_category: sub_category.clone(),
+                items,
+            });
+        } else {
+            if let Some(group) = current_group.as_mut() {
+                group.items.push(ListItem { title, link });
+            }
+        }
     }
 
-    Ok(items)
+    if let Some(group) = current_group.take() {
+        grouped_items.push(group);
+    }
+
+    Ok(grouped_items)
 }
 
 async fn insert_test_data(pool: &SqlitePool) -> Result<(), sqlx::Error> {
